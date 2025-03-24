@@ -1,4 +1,4 @@
-﻿namespace Persistance.Data
+﻿namespace Persistence.Data
 {
     public class AppDbContext : DbContext
     {
