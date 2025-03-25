@@ -9,4 +9,6 @@ global using System.Threading.Tasks;
 global using System.Reflection;
 global using Domain.Contracts;
 global using Persistence.Data;
+global using System.Collections.Concurrent;
+
 
