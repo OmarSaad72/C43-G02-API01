@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Persistance.Data.DataSeeding;
 using Persistance.Repositories;
 using Persistence.Data;
+using Services;
+using Services.Abstraction;
 
 namespace E_Commerce
 {
@@ -13,18 +15,21 @@ namespace E_Commerce
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddControllers()
+                .AddApplicationPart(typeof(Presentaion.AssemblyReference).Assembly);
             builder.Services.AddDbContext<AppDbContext>(options =>  // LifeTime of the DbContext is Scoped
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
             builder.Services.AddScoped<IDbInitializer, DbInitializer>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IServiceManager,ServiceManager>();
             builder.Services.AddAutoMapper(typeof(Services.AssemblyReference).Assembly);  // LifeTime: Transient
+
+            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+
             var app = builder.Build();
             await InitializeDbAsync(app);
 

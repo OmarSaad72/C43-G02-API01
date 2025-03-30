@@ -4,7 +4,7 @@ using Services.Abstraction;
 
 namespace Services
 {
-    internal class ServiceManager : IServiceManager
+    public class ServiceManager : IServiceManager
     {
         private readonly Lazy<IProductService> _productService;
         //private readonly IUnitOfWork _unitOfWork;
