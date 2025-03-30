@@ -3,8 +3,8 @@
     public class UnitOfWork : IUnitOfWork
     {
         private readonly AppDbContext _dbContext;
-        //private Dictionary<string, object> _repositories;
         private ConcurrentDictionary<string, object> _repositories;
+        //private Dictionary<string, object> _repositories;
         public UnitOfWork(AppDbContext dbContext)
         {
             _dbContext = dbContext;

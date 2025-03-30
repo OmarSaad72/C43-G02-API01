@@ -1,7 +1,7 @@
-
 using Domain.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Persistance.Data.DataSeeding;
+using Persistance.Repositories;
 using Persistence.Data;
 
 namespace E_Commerce
@@ -23,6 +23,8 @@ namespace E_Commerce
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
             builder.Services.AddScoped<IDbInitializer, DbInitializer>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddAutoMapper(typeof(Services.AssemblyReference).Assembly);  // LifeTime: Transient
             var app = builder.Build();
             await InitializeDbAsync(app);
 
