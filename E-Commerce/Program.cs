@@ -40,6 +40,8 @@ namespace E_Commerce
                 app.UseSwaggerUI();
             }
 
+            app.UseStaticFiles(); 
+
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
