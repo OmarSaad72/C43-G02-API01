@@ -11,11 +11,33 @@ namespace Services.Specifications
             AddInclude(p => p.ProductBrand);
             AddInclude(p => p.ProductType);
         }
+
         // Retrieve All Products (Include[Brand, Type])
-        public ProductWithBrandAndTypeSpecifications() : base(null)
+        public ProductWithBrandAndTypeSpecifications(string? sort, int? brandId, int? typeId)
+            : base(p =>
+            (!brandId.HasValue || p.BrandId == brandId) && 
+            (!typeId.HasValue || p.TypeId == typeId))
         {
             AddInclude(p => p.ProductBrand);
             AddInclude(p => p.ProductType);
+            if (!string.IsNullOrWhiteSpace(sort))
+            {
+                switch (sort.ToLower().Trim())
+                {
+                    case "pricedesc":
+                        SetOrderByDesc(p => p.Price);
+                        break;
+                    case "pricedasc":
+                        SetOrderBy(p => p.Price);
+                        break;
+                    case "namedesc":
+                        SetOrderByDesc(p => p.Name);
+                        break;
+                    default:
+                        SetOrderBy(p => p.Name);
+                        break;
+                }
+            }
         }
     }
 }

@@ -11,6 +11,10 @@
             //    query = query.Include(item);
             query = specification.IncludedExpressions.Aggregate(query, (currentQuery, includeExpression)
                 => currentQuery.Include(includeExpression));
+            if(specification.OrderBy != null)
+                query = query.OrderBy(specification.OrderBy);
+            else if(specification.OrderByDesc != null)
+                query = query.OrderByDescending(specification.OrderByDesc);
             return query;
         }
     }
