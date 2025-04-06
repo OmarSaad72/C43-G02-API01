@@ -24,5 +24,23 @@
 
         public async Task<TEntity?> GetByIdAsync(TKey Id)
             => await _dbContext.Set<TEntity>().FindAsync(Id);
+
+        public async Task<TEntity?> GetByIdAsync(Specifications<TEntity> specifications)
+        {
+            //var query = _dbContext.Set<TEntity>().AsQueryable();
+            //var result = SpecificationsEvalutor.GetQuery(query, specifications);
+            //return await result.FirstOrDefaultAsync();
+            return await ApplySpecifications(specifications).FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<TEntity>> GetAllAsync(Specifications<TEntity> specifications)
+        {
+            //var query = _dbContext.Set<TEntity>().AsQueryable();
+            //var result = SpecificationsEvalutor.GetQuery(query, specifications);
+            //return await result.ToListAsync();
+           return await ApplySpecifications(specifications).ToListAsync();
+        }
+        private IQueryable<TEntity> ApplySpecifications(Specifications<TEntity> specifications)
+            => SpecificationsEvalutor.GetQuery<TEntity>(_dbContext.Set<TEntity>(), specifications);
     }
 }
