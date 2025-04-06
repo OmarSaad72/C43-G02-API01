@@ -1,5 +1,6 @@
 ﻿using Domain.Contracts;
 using Domain.Entities;
+using System.Reflection.Metadata;
 
 namespace Services.Specifications
 {
@@ -11,6 +12,8 @@ namespace Services.Specifications
             AddInclude(p => p.ProductBrand);
             AddInclude(p => p.ProductType);
         }
+
+        //ApplyPagination(Specifications.ProductWithBrandAndTypeSpecifications pagination);
 
         // Retrieve All Products (Include[Brand, Type])
         public ProductWithBrandAndTypeSpecifications(string? sort, int? brandId, int? typeId)
