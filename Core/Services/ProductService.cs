@@ -9,13 +9,22 @@ namespace Services
 {
     internal class ProductService(IUnitOfWork unitOfWork, IMapper mapper) : IProductService
     {
-        public async Task<IEnumerable<ProductResultDTO>> GetAllProductsAsync(ProductParametersSpecifications productParametersSpecifications)
+        public async Task<PaginatedResult<ProductResultDTO>> GetAllProductsAsync(ProductParametersSpecifications parameters)
         {
             // 1.Retrieve All Product ==> Calling UnitOfWork
-            var products = await unitOfWork.GetRepository<Product, int>().GetAllAsync(new ProductWithBrandAndTypeSpecifications(productParametersSpecifications));
+            var products = await unitOfWork.GetRepository<Product, int>().GetAllAsync(new ProductWithBrandAndTypeSpecifications(parameters));
+            var totalCount = await unitOfWork.GetRepository<Product, int>().TotalCountAsync(new ProductCountSpecifications(parameters));
             // 2.Map To ProductDTO ==> Using AutoMapper
-            var result = mapper.Map<IEnumerable<ProductResultDTO>>(products);
+            var productResult = mapper.Map<IEnumerable<ProductResultDTO>>(products);
             // 3.Return
+            //return result;
+            var result = new PaginatedResult<ProductResultDTO>
+                (
+                productResult.Count(),
+                parameters.PageIndex,
+                totalCount,
+                productResult
+                );
             return result;
         }
 

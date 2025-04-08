@@ -38,9 +38,12 @@
             //var query = _dbContext.Set<TEntity>().AsQueryable();
             //var result = SpecificationsEvalutor.GetQuery(query, specifications);
             //return await result.ToListAsync();
-           return await ApplySpecifications(specifications).ToListAsync();
+            return await ApplySpecifications(specifications).ToListAsync();
         }
         private IQueryable<TEntity> ApplySpecifications(Specifications<TEntity> specifications)
             => SpecificationsEvalutor.GetQuery<TEntity>(_dbContext.Set<TEntity>(), specifications);
+
+        public async Task<int> TotalCountAsync(Specifications<TEntity> specifications)
+            => await ApplySpecifications(specifications).CountAsync();
     }
 }
