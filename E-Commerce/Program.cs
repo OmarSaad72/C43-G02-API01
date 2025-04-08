@@ -1,4 +1,5 @@
 using Domain.Contracts;
+using E_Commerce.Extensions;
 using E_Commerce.Factories;
 using E_Commerce.Middlewares;
 using Microsoft.AspNetCore.Mvc;
@@ -20,14 +21,10 @@ namespace E_Commerce
             // Add services to the container.
             builder.Services.AddControllers()
                 .AddApplicationPart(typeof(Presentaion.AssemblyReference).Assembly);
-            builder.Services.AddDbContext<AppDbContext>(options =>  // LifeTime of the DbContext is Scoped
-            {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-            });
-            builder.Services.AddScoped<IDbInitializer, DbInitializer>();
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            builder.Services.AddScoped<IServiceManager,ServiceManager>();
-            builder.Services.AddAutoMapper(typeof(Services.AssemblyReference).Assembly);  // LifeTime: Transient
+
+            builder.Services.AddInfrastructuresServices(builder.Configuration);
+            builder.Services.AddCoreServices();
+
             builder.Services.Configure<ApiBehaviorOptions>(options =>
             {
                 options.InvalidModelStateResponseFactory = ApiResponseFactory.CustomValidationErrorResponse;
