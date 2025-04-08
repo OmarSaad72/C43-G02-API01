@@ -1,5 +1,6 @@
 ﻿using Domain.Contracts;
 using Domain.Entities;
+using Shared;
 using System.Reflection.Metadata;
 
 namespace Services.Specifications
@@ -13,27 +14,25 @@ namespace Services.Specifications
             AddInclude(p => p.ProductType);
         }
 
-        //ApplyPagination(Specifications.ProductWithBrandAndTypeSpecifications pagination);
-
         // Retrieve All Products (Include[Brand, Type])
-        public ProductWithBrandAndTypeSpecifications(string? sort, int? brandId, int? typeId)
+        public ProductWithBrandAndTypeSpecifications(ProductParametersSpecifications Parameters)
             : base(p =>
-            (!brandId.HasValue || p.BrandId == brandId) && 
-            (!typeId.HasValue || p.TypeId == typeId))
+            (!Parameters.BrandId.HasValue || p.BrandId == Parameters.BrandId) && 
+            (!Parameters.TypeId.HasValue || p.TypeId == Parameters.TypeId))
         {
             AddInclude(p => p.ProductBrand);
             AddInclude(p => p.ProductType);
-            if (!string.IsNullOrWhiteSpace(sort))
+            if (Parameters.Sort != null)
             {
-                switch (sort.ToLower().Trim())
+                switch (Parameters.Sort)
                 {
-                    case "pricedesc":
+                    case ProductSortOptions.PriceDesc:
                         SetOrderByDesc(p => p.Price);
                         break;
-                    case "pricedasc":
+                    case ProductSortOptions.PriceAsc:
                         SetOrderBy(p => p.Price);
                         break;
-                    case "namedesc":
+                    case ProductSortOptions.NameDesc:
                         SetOrderByDesc(p => p.Name);
                         break;
                     default:
@@ -41,6 +40,7 @@ namespace Services.Specifications
                         break;
                 }
             }
+            ApplyPagination(Parameters.PageIndex, Parameters.PageSize);
         }
     }
 }

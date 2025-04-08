@@ -26,7 +26,7 @@ namespace Domain.Contracts
         {
             IsPaginated = true;
             Take = pageSize;
-            Skip = (pageIndex - 1) * pageSize;
+            Skip = (pageIndex - 1) * pageSize;  // Equation for skip
         }
     }
 }

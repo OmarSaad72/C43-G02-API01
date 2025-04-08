@@ -4,14 +4,15 @@ using Domain.Entities;
 using Services.Abstraction;
 using Services.Specifications;
 using Shared;
+using Shared.DTOs;
 namespace Services
 {
     internal class ProductService(IUnitOfWork unitOfWork, IMapper mapper) : IProductService
     {
-        public async Task<IEnumerable<ProductResultDTO>> GetAllProductsAsync(string? sort, int? brandId, int? typeId)
+        public async Task<IEnumerable<ProductResultDTO>> GetAllProductsAsync(ProductParametersSpecifications productParametersSpecifications)
         {
             // 1.Retrieve All Product ==> Calling UnitOfWork
-            var products = await unitOfWork.GetRepository<Product, int>().GetAllAsync(new ProductWithBrandAndTypeSpecifications(sort, brandId, typeId));
+            var products = await unitOfWork.GetRepository<Product, int>().GetAllAsync(new ProductWithBrandAndTypeSpecifications(productParametersSpecifications));
             // 2.Map To ProductDTO ==> Using AutoMapper
             var result = mapper.Map<IEnumerable<ProductResultDTO>>(products);
             // 3.Return

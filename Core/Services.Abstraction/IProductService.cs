@@ -1,10 +1,11 @@
 ﻿global using Shared;
+using Shared.DTOs;
 namespace Services.Abstraction
 {
     public interface IProductService
     {
         // Get All Products:
-        public Task<IEnumerable<ProductResultDTO>> GetAllProductsAsync(string? sort, int? brandId, int? typeId);
+        public Task<IEnumerable<ProductResultDTO>> GetAllProductsAsync(ProductParametersSpecifications productParametersSpecifications);
         // Get All ProductsBrand:
         public Task<IEnumerable<BrandResultDTO>> GetAllProductsBrandAsync();
         // Get All ProductsType:
