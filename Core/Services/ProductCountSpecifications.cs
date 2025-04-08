@@ -11,10 +11,11 @@ namespace Services
 {
     public class ProductCountSpecifications : Specifications<Product>
     {
-        public ProductCountSpecifications(ProductParametersSpecifications Parameters)
+        public ProductCountSpecifications(ProductSpecificationsParameters Parameters)
             : base(p =>
             (!Parameters.BrandId.HasValue || p.BrandId == Parameters.BrandId) &&
-            (!Parameters.TypeId.HasValue || p.TypeId == Parameters.TypeId))
+            (!Parameters.TypeId.HasValue || p.TypeId == Parameters.TypeId) &&
+            (string.IsNullOrWhiteSpace(Parameters.Search) || p.Name.ToLower().Contains(Parameters.Search.ToLower().Trim())))
         {
         }
 

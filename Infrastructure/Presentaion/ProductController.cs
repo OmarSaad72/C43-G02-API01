@@ -10,7 +10,7 @@ namespace Presentaion
     public class ProductsController(IServiceManager serviceManager) : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<PaginatedResult<ProductResultDTO>>> GetAllProductAsync([FromQuery]ProductParametersSpecifications productParametersSpecifications)
+        public async Task<ActionResult<PaginatedResult<ProductResultDTO>>> GetAllProductAsync([FromQuery]ProductSpecificationsParameters productParametersSpecifications)
         {
             var Products = await serviceManager.ProductService.GetAllProductsAsync(productParametersSpecifications);
             return Ok(Products);

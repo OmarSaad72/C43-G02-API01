@@ -9,7 +9,7 @@ namespace Services
 {
     internal class ProductService(IUnitOfWork unitOfWork, IMapper mapper) : IProductService
     {
-        public async Task<PaginatedResult<ProductResultDTO>> GetAllProductsAsync(ProductParametersSpecifications parameters)
+        public async Task<PaginatedResult<ProductResultDTO>> GetAllProductsAsync(ProductSpecificationsParameters parameters)
         {
             // 1.Retrieve All Product ==> Calling UnitOfWork
             var products = await unitOfWork.GetRepository<Product, int>().GetAllAsync(new ProductWithBrandAndTypeSpecifications(parameters));
