@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Persistance.Data.DataSeeding;
 using Persistance.Repositories;
 using Persistence.Data;
+using StackExchange.Redis;
 
 namespace E_Commerce.Extensions
 {
@@ -16,8 +17,9 @@ namespace E_Commerce.Extensions
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddDbContext<AppDbContext>(options =>  // LifeTime of the DbContext is Scoped
             {
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));  // DB for Product
             });
+            services.AddSingleton<IConnectionMultiplexer>(services=> ConnectionMultiplexer.Connect(configuration.GetConnectionString("Redis")!)); // DB for Basket
             return services;
         }
     }
