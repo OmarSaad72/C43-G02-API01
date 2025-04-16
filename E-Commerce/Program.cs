@@ -2,6 +2,7 @@ using Domain.Contracts;
 using E_Commerce.Extensions;
 using E_Commerce.Factories;
 using E_Commerce.Middlewares;
+using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistance.Data.DataSeeding;
@@ -9,6 +10,7 @@ using Persistance.Repositories;
 using Persistence.Data;
 using Services;
 using Services.Abstraction;
+using StackExchange.Redis;
 
 namespace E_Commerce
 {
@@ -21,6 +23,8 @@ namespace E_Commerce
             // Add services to the container.
             builder.Services.AddControllers()
                 .AddApplicationPart(typeof(Presentaion.AssemblyReference).Assembly);
+
+            builder.Services.AddSingleton<IConnectionMultiplexer>(_=>ConnectionMultiplexer.Connect())
 
             builder.Services.AddInfrastructuresServices(builder.Configuration);
             builder.Services.AddCoreServices();
