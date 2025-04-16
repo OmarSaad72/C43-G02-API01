@@ -18,30 +18,24 @@ namespace E_Commerce
     {
         public static async Task Main(string[] args)
         {
+            #region Services
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-            builder.Services.AddControllers()
-                .AddApplicationPart(typeof(Presentaion.AssemblyReference).Assembly);
-
-            builder.Services.AddSingleton<IConnectionMultiplexer>(_=>ConnectionMultiplexer.Connect())
-
+            // Add Infrastructures Services
             builder.Services.AddInfrastructuresServices(builder.Configuration);
+
+            //Add Core service
             builder.Services.AddCoreServices();
 
-            builder.Services.Configure<ApiBehaviorOptions>(options =>
-            {
-                options.InvalidModelStateResponseFactory = ApiResponseFactory.CustomValidationErrorResponse;
-            });
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            // Add Presentation Services
+            builder.Services.AddPresentationServices(); 
+            #endregion
 
+            #region PipleLines{Middlewares}
             var app = builder.Build();
 
-            app.UseMiddleware<GlobalErrorHandlingMiddleware>();
-
-            await InitializeDbAsync(app);
+            app.UseCustomMiddleware();
+            await app.SeedDbAsync();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -50,7 +44,7 @@ namespace E_Commerce
                 app.UseSwaggerUI();
             }
 
-            app.UseStaticFiles(); 
+            app.UseStaticFiles();
 
             app.UseHttpsRedirection();
 
@@ -59,14 +53,8 @@ namespace E_Commerce
 
             app.MapControllers();
 
-            app.Run();
-
-            async Task InitializeDbAsync(WebApplication web)
-            {
-                using var scope = web.Services.CreateScope();
-                var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
-                await dbInitializer.InitializeAsync();
-            }
+            app.Run(); 
+            #endregion
         }
     }
 }

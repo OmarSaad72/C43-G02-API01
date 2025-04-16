@@ -2,6 +2,8 @@
 using Services.Abstraction;
 using Shared;
 using Shared.DTOs;
+using Shared.ErrorModels;
+using System.Net;
 
 namespace Presentaion
 {
@@ -29,8 +31,11 @@ namespace Presentaion
             var Products = await serviceManager.ProductService.GetAllProductsTypeAsync();
             return Ok(Products);
         }
-
-        [HttpGet("Id")]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType(typeof(ValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ProductResultDTO), (int)HttpStatusCode.OK)]
+        [HttpGet("{id}")]
         public async Task<ActionResult<ProductResultDTO>> GetProductByIdAsync(int id)
         {
             var Products = await serviceManager.ProductService.GetProductsByIdAsync(id);

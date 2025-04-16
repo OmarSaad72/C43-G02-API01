@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class CustomerBasket
+    public class CustomerBasket  // Cart
     {
         public string Id { get; set; }
-        public IEnumerable<BasketItem items { get; set; }
+        public IEnumerable<BasketItem> items { get; set; }
     }
 }

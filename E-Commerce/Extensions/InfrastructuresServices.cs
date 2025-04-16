@@ -14,12 +14,10 @@ namespace E_Commerce.Extensions
         {
             services.AddScoped<IDbInitializer, DbInitializer>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-
             services.AddDbContext<AppDbContext>(options =>  // LifeTime of the DbContext is Scoped
             {
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
-
             return services;
         }
     }
