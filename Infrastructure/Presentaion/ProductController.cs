@@ -8,7 +8,7 @@ using System.Net;
 namespace Presentaion
 {
     [ApiController]
-    [Route("api/[controller]"/*==>Variable Segment*/)]  //baseUrl/api/productcontroller
+    [Route("api/[controller]"/*==>Variable Segment*/)]  //baseUrl/api/productController
     public class ProductsController(IServiceManager serviceManager) : ControllerBase
     {
         [HttpGet]
