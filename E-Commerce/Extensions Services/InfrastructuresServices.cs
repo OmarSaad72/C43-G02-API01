@@ -20,6 +20,7 @@ namespace E_Commerce.Extensions
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));  // DB for Product
             });
             services.AddSingleton<IConnectionMultiplexer>(services=> ConnectionMultiplexer.Connect(configuration.GetConnectionString("Redis")!)); // DB for Basket
+            services.AddScoped<IBasketRepo, BasketRepo>();
             return services;
         }
     }
