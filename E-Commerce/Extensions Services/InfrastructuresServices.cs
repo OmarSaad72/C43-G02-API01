@@ -2,7 +2,7 @@
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Persistance.Data.DataSeeding;
+using Persistance.Data;
 using Persistance.Identity;
 using Persistance.Repositories;
 using Persistence.Data;

@@ -5,11 +5,10 @@ using Shared.DTOs;
 using Shared.ErrorModels;
 using System.Net;
 
-namespace Presentaion
+namespace Presentation
 {
-    [ApiController]
-    [Route("api/[controller]"/*==>Variable Segment*/)]  //baseUrl/api/productController
-    public class ProductsController(IServiceManager serviceManager) : ControllerBase
+     //baseUrl/api/productController
+    public class ProductsController(IServiceManager serviceManager) : ApiController
     {
         [HttpGet]
         public async Task<ActionResult<PaginatedResult<ProductResultDTO>>> GetAllProductAsync([FromQuery]ProductSpecificationsParameters productParametersSpecifications)
@@ -31,9 +30,7 @@ namespace Presentaion
             var Products = await serviceManager.ProductService.GetAllProductsTypeAsync();
             return Ok(Products);
         }
-        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.InternalServerError)]
-        [ProducesResponseType(typeof(ValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
+       
         [ProducesResponseType(typeof(ProductResultDTO), (int)HttpStatusCode.OK)]
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductResultDTO>> GetProductByIdAsync(int id)

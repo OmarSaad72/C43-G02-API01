@@ -8,7 +8,7 @@ namespace E_Commerce.Extensions
         public static IServiceCollection AddPresentationServices(this IServiceCollection services)
         {
             services.AddControllers()
-                .AddApplicationPart(typeof(Presentaion.AssemblyReference).Assembly);
+                .AddApplicationPart(typeof(Presentation.AssemblyReference).Assembly);
             services.Configure<ApiBehaviorOptions>(options =>
             {
                 options.InvalidModelStateResponseFactory = ApiResponseFactory.CustomValidationErrorResponse;

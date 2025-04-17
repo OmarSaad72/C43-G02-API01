@@ -9,9 +9,8 @@ using System.Threading.Tasks;
 
 namespace Presentation
 {
-    [ApiController]
-    [Route("api/[controller]"/*==>Variable Segment*/)]  //baseUrl/api/Basket
-    public class BasketController(IServiceManager _serviceManager) :ControllerBase
+      //baseUrl/api/Basket
+    public class BasketController(IServiceManager _serviceManager) : ApiController
     {
         [HttpGet("{id}")]  //Get: baseUrl/api/Basket/id
         public async Task<ActionResult<BasketDto>> Get(string id)
