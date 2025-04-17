@@ -18,13 +18,26 @@ namespace Services
             var user = await userManager.FindByEmailAsync(loginDto.Email);
             if (user == null) throw new UnAuthorizedException();
             var result = await userManager.CheckPasswordAsync(user, loginDto.Password);
-            if(result == false) throw new UnAuthorizedException();
+            if (result == false) throw new UnAuthorizedException();
             return new UserResultDto(user.DisplayName, "Token", user.Email);
         }
 
-        public Task<UserResultDto> Register(RegisterDto registerDto)
+        public async Task<UserResultDto> Register(RegisterDto registerDto)
         {
-            throw new NotImplementedException();
+            var user = new User()
+            {
+                DisplayName = registerDto.DisplayName,
+                Email = registerDto.Email,
+                UserName = registerDto.DisplayName,
+                PhoneNumber = registerDto.PhoneNumber,
+            };
+            var result = await userManager.CreateAsync(user, registerDto.Password);
+            if (!result.Succeeded)
+            {
+                var errors = result.Errors.Select(e => e.Description).ToList();
+                throw new ValidationException(errors);
+            }
+            return new UserResultDto(user.DisplayName, "Token", user.Email);
         }
     }
 }
