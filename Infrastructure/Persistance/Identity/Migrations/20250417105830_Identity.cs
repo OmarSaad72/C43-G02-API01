@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Persistance.Identity.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreateIdentity : Migration
+    public partial class Identity : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,8 +30,7 @@ namespace Persistance.Identity.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Discriminator = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
-                    DisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DisplayName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -74,7 +73,7 @@ namespace Persistance.Identity.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Address",
+                name: "Addresses",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -88,9 +87,9 @@ namespace Persistance.Identity.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Address", x => x.Id);
+                    table.PrimaryKey("PK_Addresses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Address_AspNetUsers_UserId",
+                        name: "FK_Addresses_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -183,8 +182,8 @@ namespace Persistance.Identity.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Address_UserId",
-                table: "Address",
+                name: "IX_Addresses_UserId",
+                table: "Addresses",
                 column: "UserId",
                 unique: true);
 
@@ -232,7 +231,7 @@ namespace Persistance.Identity.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Address");
+                name: "Addresses");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");

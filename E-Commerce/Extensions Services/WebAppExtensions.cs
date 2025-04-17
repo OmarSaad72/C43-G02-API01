@@ -1,6 +1,5 @@
 ﻿using Domain.Contracts;
 using E_Commerce.Middlewares;
-using System.Reflection.Metadata.Ecma335;
 
 namespace E_Commerce.Extensions
 {

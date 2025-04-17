@@ -10,9 +10,18 @@ using System.Threading.Tasks;
 
 namespace Persistance.Data.DataSeeding
 {
-    public class DbInitializer(AppDbContext _dbContext, RoleManager<IdentityRole> _roleManager, UserManager<User> _userManager) : IDbInitializer
+    public class DbInitializer : IDbInitializer
     {
+        private readonly AppDbContext _dbContext;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<User> _userManager;
 
+        public DbInitializer(AppDbContext dbContext, RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
+        {
+            _dbContext = dbContext;
+            _roleManager = roleManager;
+            _userManager = userManager;
+        }
         public async Task InitializeAsync()
         {
             try
@@ -87,10 +96,10 @@ namespace Persistance.Data.DataSeeding
                     Email = "SuperAdmin@gmail.com",
                     PhoneNumber = "474839373",
                 };
-                await _userManager.CreateAsync(adminUser, "P@ssword");
-                await _userManager.CreateAsync(superAdminUser, "P@ssWord");
+                await _userManager.CreateAsync(adminUser, "P@ssW0rd");
+                await _userManager.CreateAsync(superAdminUser, "P@ssW0rd");
                 await _userManager.AddToRoleAsync(adminUser, "Admin");
-                await _userManager.AddToRoleAsync(adminUser, "SuperAdmin");
+                await _userManager.AddToRoleAsync(superAdminUser, "SuperAdmin");
             }
         }
     }

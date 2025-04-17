@@ -1,16 +1,4 @@
-using Domain.Contracts;
 using E_Commerce.Extensions;
-using E_Commerce.Factories;
-using E_Commerce.Middlewares;
-using Microsoft.AspNetCore.Connections;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Persistance.Data.DataSeeding;
-using Persistance.Repositories;
-using Persistence.Data;
-using Services;
-using Services.Abstraction;
-using StackExchange.Redis;
 
 namespace E_Commerce
 {
@@ -28,14 +16,14 @@ namespace E_Commerce
             builder.Services.AddCoreServices();
 
             // Add Presentation Services
-            builder.Services.AddPresentationServices(); 
+            builder.Services.AddPresentationServices();
             #endregion
 
             #region PipleLines{Middlewares}
             var app = builder.Build();
 
-            app.UseCustomMiddleware();
             await app.SeedDbAsync();
+            app.UseCustomMiddleware();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -53,7 +41,7 @@ namespace E_Commerce
 
             app.MapControllers();
 
-            app.Run(); 
+            app.Run();
             #endregion
         }
     }

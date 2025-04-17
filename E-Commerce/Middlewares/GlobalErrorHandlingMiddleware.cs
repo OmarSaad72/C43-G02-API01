@@ -44,14 +44,15 @@ namespace E_Commerce.Middlewares
         public async Task HandleExceptionAsync(HttpContext httpContext, Exception exception)
         {
             // set default status code 500
-            httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError; //500
             // set content type => application/json
             httpContext.Response.ContentType = "application/json";
             // C# 8
             httpContext.Response.StatusCode = exception switch
             {
-                NotFoundException => (int)HttpStatusCode.NotFound,
-                _ => (int)HttpStatusCode.InternalServerError
+                NotFoundException => (int)HttpStatusCode.NotFound, // 404
+                UnAuthorizedException => (int)HttpStatusCode.Unauthorized, //401
+                _ => (int)HttpStatusCode.InternalServerError  //500
             };
             // return standard response
             var response = new ErrorDetails

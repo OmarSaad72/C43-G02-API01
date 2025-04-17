@@ -1,8 +1,6 @@
 ﻿using Domain.Contracts;
 using Domain.Entities;
-using E_Commerce.Factories;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistance.Data.DataSeeding;
 using Persistance.Identity;
@@ -31,7 +29,7 @@ namespace E_Commerce.Extensions
             services.AddIdentity<User, IdentityRole>(o =>
             {
                 o.Password.RequireNonAlphanumeric = true;
-                o.Password.RequireDigit = true;
+                //o.Password.RequireDigit = true;
                 o.Password.RequireUppercase = true;
                 o.Password.RequireLowercase = true;
                 o.User.RequireUniqueEmail = true;

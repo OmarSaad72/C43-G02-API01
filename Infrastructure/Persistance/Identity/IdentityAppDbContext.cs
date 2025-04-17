@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Persistance.Identity
 {
-    public class IdentityAppDbContext : IdentityDbContext
+    public class IdentityAppDbContext : IdentityDbContext<User>
     {
         public IdentityAppDbContext(DbContextOptions<IdentityAppDbContext> options) : base(options)
         {
@@ -15,7 +15,7 @@ namespace Persistance.Identity
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder); /// have 7 DbSets
-            builder.Entity<Address>().ToTable(nameof(Address));
+            builder.Entity<Address>().ToTable("Addresses");
         }
     }
 }
