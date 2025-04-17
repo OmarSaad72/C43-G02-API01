@@ -1,5 +1,7 @@
 ﻿using Domain.Contracts;
+using Domain.Entities;
 using E_Commerce.Factories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistance.Data.DataSeeding;
@@ -12,7 +14,7 @@ namespace E_Commerce.Extensions
 {
     public static class InfrastructuresServices
     {
-        public static IServiceCollection AddInfrastructuresServices(this IServiceCollection services, IConfiguration configuration) 
+        public static IServiceCollection AddInfrastructuresServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<IDbInitializer, DbInitializer>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -24,8 +26,16 @@ namespace E_Commerce.Extensions
             {
                 options.UseSqlServer(configuration.GetConnectionString("IdentityConnection"));  // DB for Product
             });
-            services.AddSingleton<IConnectionMultiplexer>(services=> ConnectionMultiplexer.Connect(configuration.GetConnectionString("Redis")!)); // DB for Basket
+            services.AddSingleton<IConnectionMultiplexer>(services => ConnectionMultiplexer.Connect(configuration.GetConnectionString("Redis")!)); // DB for Basket
             services.AddScoped<IBasketRepo, BasketRepo>();
+            services.AddIdentity<User, IdentityRole>(o =>
+            {
+                o.Password.RequireNonAlphanumeric = true;
+                o.Password.RequireDigit = true;
+                o.Password.RequireUppercase = true;
+                o.Password.RequireLowercase = true;
+                o.User.RequireUniqueEmail = true;
+            }).AddEntityFrameworkStores<IdentityAppDbContext>();
             return services;
         }
     }

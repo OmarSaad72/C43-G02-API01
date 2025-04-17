@@ -1,4 +1,5 @@
 ﻿using Domain.Contracts;
+using Microsoft.AspNetCore.Identity;
 using Persistence.Data;
 using System;
 using System.Collections.Generic;
@@ -9,14 +10,9 @@ using System.Threading.Tasks;
 
 namespace Persistance.Data.DataSeeding
 {
-    public class DbInitializer : IDbInitializer
+    public class DbInitializer(AppDbContext _dbContext, RoleManager<IdentityRole> _roleManager, UserManager<User> _userManager) : IDbInitializer
     {
-        private readonly AppDbContext _dbContext;
 
-        public DbInitializer(AppDbContext dbContext)
-        {
-            _dbContext = dbContext;
-        }
         public async Task InitializeAsync()
         {
             try
@@ -63,6 +59,38 @@ namespace Persistance.Data.DataSeeding
             catch (Exception ex)
             {
 
+            }
+        }
+
+        public async Task InitializeIdentityAsync()
+        {
+            // Seed Roles
+            if (!_roleManager.Roles.Any())
+            {
+                await _roleManager.CreateAsync(new IdentityRole("Admin"));
+                await _roleManager.CreateAsync(new IdentityRole("SuperAdmin"));
+            }
+            //Seed Users
+            if (!_userManager.Users.Any())
+            {
+                var adminUser = new User()
+                {
+                    DisplayName = "Admin",
+                    UserName = "Admin",
+                    Email = "Admin@gmail.com",
+                    PhoneNumber = "1234567890",
+                };
+                var superAdminUser = new User()
+                {
+                    DisplayName = "SuperAdmin",
+                    UserName = "SuperAdmin",
+                    Email = "SuperAdmin@gmail.com",
+                    PhoneNumber = "474839373",
+                };
+                await _userManager.CreateAsync(adminUser, "P@ssword");
+                await _userManager.CreateAsync(superAdminUser, "P@ssWord");
+                await _userManager.AddToRoleAsync(adminUser, "Admin");
+                await _userManager.AddToRoleAsync(adminUser, "SuperAdmin");
             }
         }
     }
