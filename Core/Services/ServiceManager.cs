@@ -2,7 +2,9 @@
 using Domain.Contracts;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using Services.Abstraction;
+using Shared;
 
 namespace Services
 {
@@ -14,11 +16,11 @@ namespace Services
         //private readonly IUnitOfWork _unitOfWork;
         //private readonly IMapper _mapper;
 
-        public ServiceManager(IUnitOfWork unitOfWork, IMapper mapper, IBasketRepo basketRepo, UserManager<User> userManager)
+        public ServiceManager(IUnitOfWork unitOfWork, IMapper mapper, IBasketRepo basketRepo, UserManager<User> userManager, IOptions<JwtOptions> options)
         {
             _productService = new Lazy<IProductService>(() => new ProductService(unitOfWork, mapper));
             _basketService = new Lazy<IBasketService>(() => new BasketService(basketRepo, mapper));
-            _authenticationService = new Lazy<IAuthenticationService>(() => new AuthenticationService(userManager));
+            _authenticationService = new Lazy<IAuthenticationService>(() => new AuthenticationService(userManager, options));
         }
         public IProductService ProductService => _productService.Value;
 

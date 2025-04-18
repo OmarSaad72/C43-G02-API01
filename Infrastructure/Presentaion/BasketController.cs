@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Services.Abstraction;
 using Shared.DTOs;
 using System;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Presentation
 {
+    [Authorize] // If Login
       //baseUrl/api/Basket
     public class BasketController(IServiceManager _serviceManager) : ApiController
     {

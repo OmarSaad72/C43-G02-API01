@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Services.Abstraction;
 using Shared;
 using Shared.DTOs;
@@ -7,6 +8,7 @@ using System.Net;
 
 namespace Presentation
 {
+    [Authorize] // If Login
      //baseUrl/api/productController
     public class ProductsController(IServiceManager serviceManager) : ApiController
     {

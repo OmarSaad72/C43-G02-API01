@@ -13,7 +13,7 @@ namespace E_Commerce
             builder.Services.AddInfrastructuresServices(builder.Configuration);
 
             //Add Core service
-            builder.Services.AddCoreServices();
+            builder.Services.AddCoreServices(builder.Configuration);
 
             // Add Presentation Services
             builder.Services.AddPresentationServices();
@@ -36,6 +36,7 @@ namespace E_Commerce
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 

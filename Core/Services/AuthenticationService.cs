@@ -1,8 +1,11 @@
 ﻿using Domain.Entities;
 using Domain.Exceptions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualBasic.FileIO;
 using Services.Abstraction;
+using Shared;
 using Shared.DTOs;
 using System;
 using System.Collections.Generic;
@@ -14,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Services
 {
-    public class AuthenticationService(UserManager<User> userManager) : IAuthenticationService
+    public class AuthenticationService(UserManager<User> userManager, IOptions<JwtOptions> options) : IAuthenticationService
     {
         public async Task<UserResultDto> Login(LoginDto loginDto)
         {
@@ -44,6 +47,7 @@ namespace Services
         }
         private async Task<string> CreateTokenAsync(User user)
         {
+            var jwtOptions = options.Value;
             // Private Claims
             var claims = new List<Claim>
             {
@@ -55,10 +59,10 @@ namespace Services
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("5758868757ruyrfdyurf763rkfndksnf76rdfy5e54e6765r8779t79tg78tgjyfu6yr8500y90yh987ew451q34rf67rfif787f6"));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecretKey));
             var signingCreds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var token = new JwtSecurityToken(issuer: "https://localhost:7224/", audience: "UrlFrontEnd", claims, DateTime.UtcNow.AddDays(15), signingCredentials: signingCreds);
-        return new JwtSecurityTokenHandler().WriteToken(token);
+            var token = new JwtSecurityToken(issuer: jwtOptions.Issuer, audience: jwtOptions.Audience,claims: claims ,expires: DateTime.UtcNow.AddDays(jwtOptions.ExpirationInDays), signingCredentials: signingCreds);
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }
