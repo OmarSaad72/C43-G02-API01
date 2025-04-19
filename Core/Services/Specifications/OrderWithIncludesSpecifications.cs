@@ -24,7 +24,7 @@ namespace Services.Specifications
             SetOrderBy(o => o.OrderDate);
         }
     }
-    {
+    
 
     }
-}
+

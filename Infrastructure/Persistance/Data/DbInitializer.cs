@@ -1,4 +1,5 @@
 ﻿using Domain.Contracts;
+using Domain.Entities.OrderEntities;
 using Microsoft.AspNetCore.Identity;
 using Persistence.Data;
 using System;
@@ -26,49 +27,57 @@ namespace Persistance.Data
         {
             try
             {
-                if (_dbContext.Database.GetPendingMigrations().Any())
+                //if (_dbContext.Database.GetPendingMigrations().Any())
+                //{
+                await _dbContext.Database.MigrateAsync();
+                if (!_dbContext.ProductTypes.Any())
                 {
-                    await _dbContext.Database.MigrateAsync();
-                    if (!_dbContext.ProductTypes.Any())
+                    //C:\Users\OmarSaad\source\repos\E-CommerceProject\Infrastructure\Persistance\Data\DataSeeding\types.json
+                    var typesData = await File.ReadAllTextAsync(@"..\Infrastructure\Persistance\Data\DataSeeding\types.json");
+                    var types = JsonSerializer.Deserialize<List<ProductType>>(typesData);
+                    if (types != null && types.Any())
                     {
-                        //C:\Users\OmarSaad\source\repos\E-CommerceProject\Infrastructure\Persistance\Data\DataSeeding\types.json
-                        var typesData = await File.ReadAllTextAsync(@"..\Infrastructure\Persistance\Data\DataSeeding\types.json");
-                        var types = JsonSerializer.Deserialize<List<ProductType>>(typesData);
-                        if (types != null && types.Any())
-                        {
-                            await _dbContext.AddRangeAsync(types);
-                            await _dbContext.SaveChangesAsync();
-                        }
-                    }
-                    if (!_dbContext.ProductBrands.Any())
-                    {
-                        //C:\Users\OmarSaad\source\repos\E-CommerceProject\Infrastructure\Persistance\Data\DataSeeding\brands.json
-                        var BrandsData = await File.ReadAllTextAsync(@"..\Infrastructure\Persistance\Data\DataSeeding\brands.json");
-                        var brands = JsonSerializer.Deserialize<List<ProductBrand>>(BrandsData);
-                        if (brands != null && brands.Any())
-                        {
-                            await _dbContext.AddRangeAsync(brands);
-                            await _dbContext.SaveChangesAsync();
-                        }
-                    }
-                    if (!_dbContext.Products.Any())
-                    {
-                        //C:\Users\OmarSaad\source\repos\E-CommerceProject\Infrastructure\Persistance\Data\DataSeeding\products.json
-                        var productsData = await File.ReadAllTextAsync(@"..\Infrastructure\Persistance\Data\DataSeeding\products.json");
-                        var products = JsonSerializer.Deserialize<List<Product>>(productsData);
-                        if (products != null && products.Any())
-                        {
-                            await _dbContext.AddRangeAsync(products);
-                            await _dbContext.SaveChangesAsync();
-                        }
+                        await _dbContext.AddRangeAsync(types);
+                        await _dbContext.SaveChangesAsync();
                     }
                 }
+                if (!_dbContext.ProductBrands.Any())
+                {
+                    //C:\Users\OmarSaad\source\repos\E-CommerceProject\Infrastructure\Persistance\Data\DataSeeding\brands.json
+                    var BrandsData = await File.ReadAllTextAsync(@"..\Infrastructure\Persistance\Data\DataSeeding\brands.json");
+                    var brands = JsonSerializer.Deserialize<List<ProductBrand>>(BrandsData);
+                    if (brands != null && brands.Any())
+                    {
+                        await _dbContext.AddRangeAsync(brands);
+                        await _dbContext.SaveChangesAsync();
+                    }
+                }
+                if (!_dbContext.Products.Any())
+                {
+                    //C:\Users\OmarSaad\source\repos\E-CommerceProject\Infrastructure\Persistance\Data\DataSeeding\products.json
+                    var productsData = await File.ReadAllTextAsync(@"..\Infrastructure\Persistance\Data\DataSeeding\products.json");
+                    var products = JsonSerializer.Deserialize<List<Product>>(productsData);
+                    if (products != null && products.Any())
+                    {
+                        await _dbContext.AddRangeAsync(products);
+                        await _dbContext.SaveChangesAsync();
+                    }
+                }
+                if (!_dbContext.DeliveryMethods.Any())
+                {
+                    //C:\Users\OmarSaad\source\repos\E-CommerceProject\Infrastructure\Persistance\Data\DataSeeding\delivery.json
+                    var methodData = await File.ReadAllTextAsync(@"..\Infrastructure\Persistance\Data\DataSeeding\delivery.json");
+                    var methods = JsonSerializer.Deserialize<List<DeliveryMethods>>(methodData);
+                    if (methods != null && methods.Any())
+                    {
+                        await _dbContext.AddRangeAsync(methods);
+                        await _dbContext.SaveChangesAsync();
+                    }
+                }
+                //}
 
             }
-            catch (Exception ex)
-            {
-
-            }
+            catch (Exception ex) { }
         }
 
         public async Task InitializeIdentityAsync()
