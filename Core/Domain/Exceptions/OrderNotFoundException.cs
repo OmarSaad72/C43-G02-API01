@@ -1,0 +1,19 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Domain.Exceptions
+{
+    public sealed class OrderNotFoundException : NotFoundException
+    {
+        public OrderNotFoundException(Guid id) : base($"Order with id {id} not found.")
+        {
+        }
+        public OrderNotFoundException(string email) : base($"Order with email {email} not found.")
+        {
+        }
+
+    }
+}

@@ -4,7 +4,6 @@
     {
         public Order()
         {
-            
         }
         public Order(string userEmail, Address shippingAddress, ICollection<OrderItem> orderItems, DeliveryMethods deliveryMethods, decimal subtotal)
         {
