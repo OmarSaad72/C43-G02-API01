@@ -1,20 +1,29 @@
+using E_Commerce.Extensions;
 
 namespace E_Commerce
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
+            #region Services
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            // Add Infrastructures Services
+            builder.Services.AddInfrastructuresServices(builder.Configuration);
 
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            //Add Core service
+            builder.Services.AddCoreServices(builder.Configuration);
 
+            // Add Presentation Services
+            builder.Services.AddPresentationServices();
+            #endregion
+
+            #region PipleLines{Middlewares}
             var app = builder.Build();
+
+            await app.SeedDbAsync();
+            app.UseCustomMiddleware();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -23,14 +32,18 @@ namespace E_Commerce
                 app.UseSwaggerUI();
             }
 
+            app.UseStaticFiles();
+
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 
             app.MapControllers();
 
             app.Run();
+            #endregion
         }
     }
 }
