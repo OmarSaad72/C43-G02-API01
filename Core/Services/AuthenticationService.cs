@@ -1,6 +1,8 @@
-﻿using Domain.Entities;
+﻿using AutoMapper;
+using Domain.Entities;
 using Domain.Exceptions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualBasic.FileIO;
@@ -17,8 +19,47 @@ using System.Threading.Tasks;
 
 namespace Services
 {
-    public class AuthenticationService(UserManager<User> userManager, IOptions<JwtOptions> options) : IAuthenticationService
+    public class AuthenticationService(UserManager<User> userManager,IMapper mapper ,IOptions<JwtOptions> options) : IAuthenticationService
     {
+        public async Task<bool> CheckIfEmailExist(string email)
+        {
+            var user = await userManager.FindByEmailAsync(email);
+            return user != null;
+        }
+
+        public async Task<ShippingAddressDto> GetUserAddress(string email)
+        {
+            var user = await userManager.Users.Include(u => u.Address)
+                .FirstOrDefaultAsync(u => u.Email == email) ?? throw new UserNotFoundException(email);
+            return mapper.Map<ShippingAddressDto>(user.Address);
+        }
+
+        public async Task<UserResultDto> GetUserByEmail(string email)
+        {
+            var user = await userManager.FindByEmailAsync(email) ?? throw new UserNotFoundException(email);
+            return new UserResultDto(user.DisplayName,await CreateTokenAsync(user), user.Email);
+        }
+        public async Task<ShippingAddressDto> UpdateUserAddress(ShippingAddressDto addressDto, string email)
+        {
+            var user = await userManager.Users.Include(u => u.Address)
+                .FirstOrDefaultAsync(u => u.Email == email) ?? throw new UserNotFoundException(email);
+            if(user.Address != null) // ==> Update
+            {
+                user.Address.FName = addressDto.FName;
+                user.Address.LName = addressDto.LName;
+                user.Address.City = addressDto.City;
+                user.Address.Country = addressDto.Country;
+                user.Address.Street = addressDto.Street;
+            }
+            else // ==> if you don't need to update
+            {
+                var address = mapper.Map<Address>(addressDto);
+                user.Address = address;
+            }
+            await userManager.UpdateAsync(user);
+            return mapper.Map<ShippingAddressDto>(user);
+        }
+
         public async Task<UserResultDto> Login(LoginDto loginDto)
         {
             var user = await userManager.FindByEmailAsync(loginDto.Email);
@@ -45,6 +86,7 @@ namespace Services
             }
             return new UserResultDto(user.DisplayName, await CreateTokenAsync(user), user.Email);
         }
+
         private async Task<string> CreateTokenAsync(User user)
         {
             var jwtOptions = options.Value;
@@ -61,7 +103,7 @@ namespace Services
             }
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecretKey));
             var signingCreds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var token = new JwtSecurityToken(issuer: jwtOptions.Issuer, audience: jwtOptions.Audience,claims: claims ,expires: DateTime.UtcNow.AddDays(jwtOptions.ExpirationInDays), signingCredentials: signingCreds);
+            var token = new JwtSecurityToken(issuer: jwtOptions.Issuer, audience: jwtOptions.Audience, claims: claims, expires: DateTime.UtcNow.AddDays(jwtOptions.ExpirationInDays), signingCredentials: signingCreds);
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
