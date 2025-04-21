@@ -12,7 +12,7 @@ namespace Services
     {
         private readonly Lazy<IProductService> _productService;
         private readonly Lazy<IBasketService>  _basketService;
-        private readonly Lazy<IAuthenticationService>  _authenticationService;
+        private readonly Lazy<IAuthenticationService> _authenticationService;
         private readonly Lazy<IOrderService>  _orderService;
         //private readonly IUnitOfWork _unitOfWork;
         //private readonly IMapper _mapper;
